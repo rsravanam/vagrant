@@ -1,0 +1,86 @@
+{
+  "trigger": {
+    "schedule": {
+      "interval": "5s"
+    }
+  },
+  "input": {
+    "search": {
+      "request": {
+        "search_type": "query_then_fetch",
+        "indices": [
+          "<domain-controller-{now/d}>"
+        ],
+        "types": [],
+        "body": {
+          "size": 1,
+          "query": {
+            "bool": {
+              "must": [
+                {
+                  "query_string": {
+                    "query": "log_name:Security AND event_id:4625",
+                    "analyze_wildcard": true
+                  }
+                },
+                {
+                  "range": {
+                    "@timestamp": {
+                      "gte": "now-2m",
+                      "lte": "now"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "sort": [
+            {
+              "@timestamp": "desc"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "condition": {
+    "compare": {
+      "ctx.payload.hits.total": {
+        "gt": 0
+      }
+    }
+  },
+  "actions": {
+    "email_administrator": {
+      "throttle_period_in_millis": 1800,
+      "transform": {
+        "script": {
+          "source": "ctx.payload.transform = []; def document = ctx.payload.hits.hits.0._source.message; document = document.replace('\n','<br/>').replace('\t','&nbsp;&nbsp;&nbsp;&nbsp;'); ctx.payload.transform.add(document); return ctx.payload;",
+          "lang": "painless"
+        }
+      },
+      "email": {
+        "profile": "standard",
+        "attachments": {
+          "attached_data": {
+            "data": {
+              "format": "json"
+            }
+          }
+        },
+        "priority": "high",
+        "to": [
+          "ravi.sravanam@ggktech.com",
+          "nagaraju.rapelli@ggktech.com"
+        ],
+        "subject": "Event ID {{ctx.payload.hits.hits.0._source.event_id}} Details [An account failed to log on]",
+        "body": {
+          "html": "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" /><style>p {line-height: 1.4;} a {  outline: none;  text-decoration: none;  padding: 2px 1px 0;}a:link {  color: blue;}a:visited {  color: #437A16;} a:focus {  border-bottom: 5px solid;  background: #BAE498; } a:hover { border-bottom: 0px solid; background: #CDFEAA; a:active {  background: #265301;  color: #CDFEAA;}</style></head><body><table border='1' cellpadding='5'><tr style='background-color: #006699; color: #ffffff;'><td><b>Event ID</b></td><td><b>User</b></td><td><b>Workstation</b></td><td><b>Source Network Address</b></td><td><b>Domain</b></td><td><b>Source Name</b></td><td><b>Record Number</b></td><td><b>Audit Status</b></td><td><b>Log Level</b></td><td><b>Log Type</b></td></tr><tr bgcolor='#f2f2f2'><td>{{ctx.payload.hits.hits.0._source.event_id}}</td><td>{{ctx.payload.hits.hits.0._source.event_data.TargetUserName}}</td><td>{{ctx.payload.hits.hits.0._source.event_data.WorkstationName}}</td><td>{{ctx.payload.hits.hits.0._source.event_data.IpAddress}}</td><td>{{ctx.payload.hits.hits.0._source.event_data.TargetDomainName}}</td><td>{{ctx.payload.hits.hits.0._source.source_name}}</td><td>{{ctx.payload.hits.hits.0._source.record_number}}</td><td>{{ctx.payload.hits.hits.0._source.keywords.0}}</td><td>{{ctx.payload.hits.hits.0._source.level}}</td><td>{{ctx.payload.hits.hits.0._source.log_name}}</td></tr><tr style='background-color: #006699; color: #ffffff;'><td colspan='10' align='center'><b>Event Message<b></td></tr><tr bgcolor='#ebfaeb'><td colspan='10'><br/><p align='justify'><b>{{ctx.payload.transform.0}}</b></p><br/></td><tr bgcolor='#f2f2f2'></table><br/><p align='left' focus=\"border-bottom: 1px solid;\"><b><a href=\"http://172.16.6.94:4000/app/kibana#/discover?_g=(refreshInterval:('$$hashKey':'object:15031',display:Off,pause:!f,section:0,value:0),time:(from:now-15m,mode:quick,to:now))&_a=(columns:!(message,event_data.IpAddress,beat.hostname,event_data.LogonProcessName,event_data.TargetDomainName,event_data.TargetUserName,event_data.WorkstationName,event_id,log_name,source_name,record_number,keywords),index:'domain-controller-*',interval:auto,query:(language:lucene,query:'event_id:4625'),sort:!('@timestamp',desc))\">Login to Kibaba Dashboard</a></b></p></body></html>"
+        }
+      }
+    }
+  },
+  "metadata": {
+    "color": "red"
+  }
+}

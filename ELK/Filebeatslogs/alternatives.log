@@ -1,0 +1,2 @@
+update-alternatives 2018-05-11 06:47:29: run with --install /usr/bin/gnome-www-browser gnome-www-browser /usr/bin/firefox 40
+update-alternatives 2018-05-11 06:47:29: run with --install /usr/bin/x-www-browser x-www-browser /usr/bin/firefox 40

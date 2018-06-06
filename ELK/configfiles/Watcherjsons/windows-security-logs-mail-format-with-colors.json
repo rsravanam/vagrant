@@ -1,0 +1,100 @@
+{
+  "trigger": {
+    "schedule": {
+      "interval": "10s"
+    }
+  },
+  "input": {
+    "search": {
+      "request": {
+        "search_type": "query_then_fetch",
+        "indices": [
+          "domain-controller-*"
+        ],
+        "types": [],
+        "body": {
+          "size": 0,
+          "query": {
+            "dis_max": {
+              "tie_breaker": 0.7,
+              "boost": 1.2,
+              "queries": [
+                {
+                  "term": {
+                    "event_id": 4688
+                  }
+                },
+                {
+                  "term": {
+                    "log_name": "Security"
+                  }
+                },
+                {
+                  "term": {
+                    "level": "Informaton"
+                  }
+                },
+                {
+                  "term": {
+                    "keywords": "Audit Success"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "condition": {
+    "compare": {
+      "ctx.payload.hits.total": {
+        "gt": 1
+      }
+    }
+  },
+  "actions": {
+    "email_administrator": {
+      "email": {
+        "profile": "standard",
+        "attachments": {
+          "attached_data": {
+            "data": {
+              "format": "json"
+            }
+          }
+        },
+        "priority": "high",
+        "to": [
+          "ravi.sravanam@ggktech.com",
+          "nagaraju.rapelli@ggktech.com"
+        ],
+        "subject": "Event ID {{ctx.payload.hits.hits.0._source.event_id}} From {{ctx.payload.hits.hits.0._source.computer_name}}",
+        "body": {
+          "html": "<html><body><table border='1' cellpadding='10'><tr style='background-color: #006699; color: #ffffff;'><td><b>Event ID</b></td><td><b>Total Hits</b></td><td><b>Machine</b></td><td><b>Log Name</b></td><td><b>Audit Message</b></td><td><b>Level</b></tr><tr bgcolor='#f2f2f2'><td>{{ctx.payload.hits.hits.0._source.event_id}}</td><td>{{ctx.payload.hits.total}}</td><td>{{ctx.payload.hits.hits.0._source.computer_name}}</td><td>{{ctx.payload.hits.hits.0._source.log_name}}</td><td>{{ctx.payload.hits.hits.0._source.keywords.0}}</td><td>{{ctx.payload.hits.hits.0._source.level}}</td></tr><tr bgcolor='#ebfaeb'><td colspan='6'><br/><p align='justify'><b>{{ctx.payload.hits.hits.0._source.message}}</b></p><br/></td><tr bgcolor='#f2f2f2'><td colspan='6'><p align='center'><b><a href=\"http://172.28.128.13:8600/app/kibana#/discover?_g=()&_a=(columns:!(_source),index:'domain-controller-*',interval:auto,query:(language:lucene,query:''),sort:!('@timestamp',desc))\">Login to Kibaba Dashboard</a></b></p></td></tr><tr bgcolor='#ebfaeb'><td colspan='6'><p align='center'><b><i>For More Details, Please Check The Attachment.</p></b></i></td></tr></table></body></html>"
+        }
+      }
+    }
+  },
+  "metadata": {
+    "color": "red"
+  },
+  "transform": {
+    "search": {
+      "request": {
+        "search_type": "query_then_fetch",
+        "indices": [
+          "domain-controller-*"
+        ],
+        "types": [],
+        "body": {
+          "query": {
+            "match": {
+              "event_id": "4688"
+            }
+          }
+        }
+      }
+    }
+  }
+}

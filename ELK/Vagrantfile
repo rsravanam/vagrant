@@ -1,0 +1,77 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+
+# Vagrant Variables
+
+vagrant_box = "bento/ubuntu-16.04"
+vagrant_network = "private_network"
+vagrant_network_type = 'dhcp'
+vagrant_elasticsearch_install_script = "elasticsearch.sh"
+vagrant_kibana_install_script = "kibana.sh"
+vagrant_logstash_install_script = "logstash.sh"
+vagrant_vm_provider = "virtualbox"
+vagrant_guest_kibana_port = 5601
+vagrant_host_kibana_port = 8201
+vagrant_guest_elasticsearch_port = 9200
+vagrant_host_elasticsearch_port = 8200
+
+
+Vagrant.configure(2) do |config|
+
+  config.vm.define "logstash" do |logstash|
+
+    logstash.vm.hostname = "logstash"
+    logstash.vm.box = vagrant_box    
+    logstash.vm.network vagrant_network, type: vagrant_network_type
+    logstash.vm.provision :shell, path: vagrant_logstash_install_script
+
+    logstash.vm.provider vagrant_vm_provider do |vb|
+
+      vb.name = "logstash"
+      vb.memory = "1048"
+
+    end
+
+  end
+
+  config.vm.define "elasticsearch" do |elasticsearch|
+
+    elasticsearch.vm.hostname = "elasticsearch"
+    elasticsearch.vm.box = vagrant_box    
+    elasticsearch.vm.network vagrant_network, type: vagrant_network_type
+    elasticsearch.vm.provision :shell, path: vagrant_elasticsearch_install_script
+    elasticsearch.vm.network "forwarded_port", guest: vagrant_guest_elasticsearch_port, host: vagrant_host_elasticsearch_port
+    elasticsearch.vm.provider vagrant_vm_provider do |vb|
+
+      vb.name = "elasticsearch"
+      vb.memory = "2048"
+
+    end
+
+  end
+
+  config.vm.define "kibana" do |kibana|
+
+    kibana.vm.hostname = "kibana"
+    kibana.vm.box = vagrant_box    
+    kibana.vm.network vagrant_network, type: vagrant_network_type
+    kibana.vm.provision :shell, path: vagrant_kibana_install_script
+    kibana.vm.network "forwarded_port", guest: vagrant_guest_kibana_port, host: vagrant_host_kibana_port
+    
+    kibana.vm.provider vagrant_vm_provider do |vb|
+
+      vb.name = "kibana"
+      vb.memory = "1048"
+
+    end
+
+  end
+  
+end
+
+	
