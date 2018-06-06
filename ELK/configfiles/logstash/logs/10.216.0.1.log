@@ -1,0 +1,2 @@
+2018-04-26T18:28:57.316639+05:30 10.216.0.1 330: Apr 26 18:28:58.701: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: chandra.admin] [Source: 172.16.0.63] [localport: 22] at 18:28:58 IST Thu Apr 26 2018
+2018-04-26T18:29:54.151718+05:30 10.216.0.1 331: Apr 26 18:29:55.534: %SYS-6-LOGOUT: User chandra.admin has exited tty session 1(172.16.0.63)

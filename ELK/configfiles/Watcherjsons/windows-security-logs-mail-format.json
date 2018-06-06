@@ -1,0 +1,76 @@
+{
+  "trigger": {
+    "schedule": {
+      "interval": "10s"
+    }
+  },
+  "input": {
+    "search": {
+      "request": {
+        "search_type": "query_then_fetch",
+        "indices": [
+          "domain-controller-*"
+        ],
+        "types": [],
+        "body": {
+          "size": 0,
+          "query": {
+            "match": {
+              "event_id": "4688"
+            }
+          }
+        }
+      }
+    }
+  },
+  "condition": {
+    "compare": {
+      "ctx.payload.hits.total": {
+        "gt": 1
+      }
+    }
+  },
+  "actions": {
+    "email_administrator": {
+      "email": {
+        "profile": "standard",
+        "attachments": {
+          "attached_data": {
+            "data": {
+              "format": "json"
+            }
+          }
+        },
+        "priority": "high",
+        "to": [
+          "ravi.sravanam@ggktech.com"
+        ],
+        "subject": "Encountered {{ctx.payload.hits.total}} errors",
+        "body": {
+          "html": "<html><body><table border='1' cellpadding='10'><tr><td><b>Event ID</b></td><td><b>Total Hits</b></td><td><b>Machine</b></td><td><b>Log Name</b></td><td><b>Audit Message</b></td><td><b>Level</b></tr><tr><td>{{ctx.payload.hits.hits.0._source.event_id}}</td><td>{{ctx.payload.hits.total}}</td><td>{{ctx.payload.hits.hits.0._source.computer_name}}</td><td>{{ctx.payload.hits.hits.0._source.log_name}}</td><td>{{ctx.payload.hits.hits.0._source.keywords.0}}</td><td>{{ctx.payload.hits.hits.0._source.level}}</td></tr><tr><td colspan='6'><br/><p><b>{{ctx.payload.hits.hits.0._source.message}}</b></p><br/></td><tr><td colspan='6'><p><b><i>For More Details, Please Check Attachment.</p></b></i></td></tr></table></body></html>"
+        }
+      }
+    }
+  },
+  "metadata": {
+    "color": "red"
+  },
+  "transform": {
+    "search": {
+      "request": {
+        "search_type": "query_then_fetch",
+        "indices": [
+          "domain-controller-*"
+        ],
+        "types": [],
+        "body": {
+          "query": {
+            "match": {
+              "event_id": "4688"
+            }
+          }
+        }
+      }
+    }
+  }
+}

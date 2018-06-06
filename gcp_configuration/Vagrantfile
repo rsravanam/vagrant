@@ -1,0 +1,38 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+
+# Vagrant Variables
+
+vagrant_box = "bento/ubuntu-16.04"
+vagrant_network = "private_network"
+vagrant_network_type = 'dhcp'
+vagrant_jenkins_install_script = "install.sh"
+vagrant_vm_provider = "virtualbox"
+vagrant_guest_port = 8080
+vagrant_host_port = 8282
+
+Vagrant.configure(2) do |config|
+
+  config.vm.define "jenkins-server" do |jenkins_server|
+  
+    jenkins_server.vm.hostname = "jenkins-server"
+    jenkins_server.vm.box = vagrant_box
+    jenkins_server.vm.network "forwarded_port", guest: vagrant_guest_port, host: vagrant_host_port
+    jenkins_server.vm.network vagrant_network, type: vagrant_network_type
+    jenkins_server.vm.provision :shell, path: vagrant_jenkins_install_script
+    
+	jenkins_server.vm.provider vagrant_vm_provider do |vb|
+      vb.name = "jenkins-server"
+      vb.memory = "1048"
+    end
+	
+  end
+
+end
+
+	

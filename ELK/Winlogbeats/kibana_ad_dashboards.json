@@ -1,0 +1,100 @@
+[
+  {
+    "_id": "Winlogbeat-Account-Usage",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Windows - Account Usage",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[\n  {\n    \"col\": 7,\n    \"id\": \"Failed-Logon-Attempts-Area-Chart\",\n    \"panelIndex\": 2,\n    \"row\": 1,\n    \"size_x\": 6,\n    \"size_y\": 4,\n    \"type\": \"visualization\"\n  },\n  {\n    \"col\": 3,\n    \"id\": \"Remote-Desktop-Connections\",\n    \"panelIndex\": 3,\n    \"row\": 5,\n    \"size_x\": 10,\n    \"size_y\": 4,\n    \"type\": \"visualization\"\n  },\n  {\n    \"col\": 1,\n    \"id\": \"Logon-Map\",\n    \"panelIndex\": 5,\n    \"row\": 5,\n    \"size_x\": 2,\n    \"size_y\": 4,\n    \"type\": \"visualization\"\n  },\n  {\n    \"col\": 1,\n    \"id\": \"Total-Successful-Logons-1\",\n    \"panelIndex\": 6,\n    \"row\": 1,\n    \"size_x\": 6,\n    \"size_y\": 4,\n    \"type\": \"visualization\"\n  }\n]",
+      "optionsJSON": "{\n  \"darkTheme\": false\n}",
+      "uiStateJSON": "{\n  \"P-1\": {\n    \"vis\": {\n      \"params\": {\n        \"sort\": {\n          \"columnIndex\": null,\n          \"direction\": null\n        }\n      }\n    }\n  },\n  \"P-2\": {\n    \"vis\": {\n      \"legendOpen\": true\n    }\n  },\n  \"P-6\": {\n    \"vis\": {\n      \"params\": {\n        \"sort\": {\n          \"columnIndex\": null,\n          \"direction\": null\n        }\n      }\n    }\n  }\n}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\n  \"filter\": [\n    {\n      \"query\": {\n        \"query_string\": {\n          \"analyze_wildcard\": true,\n          \"query\": \"*\"\n        }\n      }\n    }\n  ]\n}"
+      }
+    }
+  },
+  {
+    "_id": "Winlogbeat-Successful-User-Logon",
+    "_type": "search",
+    "_source": {
+      "title": "Winlogbeat - Successful User Logon",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "event_data.TargetUserName",
+        "event_data.TargetDomainName",
+        "event_data.TargetUserSid",
+        "event_data.LogonType",
+        "event_data.TargetLogonId"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"winlogbeat-*\",\"query\":{\"query_string\":{\"query\":\"!event_data.TargetUserName:*$\",\"analyze_wildcard\":true}},\"filter\":[{\"$state\":{\"store\":\"appState\"},\"meta\":{\"alias\":null,\"disabled\":false,\"index\":\"winlogbeat-*\",\"key\":\"event_id\",\"negate\":false,\"value\":\"4,624\"},\"query\":{\"match\":{\"event_id\":{\"query\":4624,\"type\":\"phrase\"}}}},{\"$state\":{\"store\":\"appState\"},\"meta\":{\"alias\":null,\"disabled\":false,\"index\":\"winlogbeat-*\",\"key\":\"event_data.LogonType\",\"negate\":true,\"value\":\"5\"},\"query\":{\"match\":{\"event_data.LogonType\":{\"query\":\"5\",\"type\":\"phrase\"}}}},{\"$state\":{\"store\":\"appState\"},\"meta\":{\"alias\":null,\"disabled\":false,\"index\":\"winlogbeat-*\",\"key\":\"event_data.LogonType\",\"negate\":true,\"value\":\"0\"},\"query\":{\"match\":{\"event_data.LogonType\":{\"query\":\"0\",\"type\":\"phrase\"}}}},{\"$state\":{\"store\":\"appState\"},\"meta\":{\"alias\":null,\"disabled\":false,\"index\":\"winlogbeat-*\",\"key\":\"event_data.TargetUserName\",\"negate\":true,\"value\":\"ANONYMOUS LOGON\"},\"query\":{\"match\":{\"event_data.TargetUserName\":{\"query\":\"ANONYMOUS LOGON\",\"type\":\"phrase\"}}}},{\"$state\":{\"store\":\"appState\"},\"meta\":{\"alias\":null,\"disabled\":false,\"index\":\"winlogbeat-*\",\"key\":\"event_data.TargetDomainName\",\"negate\":true,\"value\":\"Window Manager\"},\"query\":{\"match\":{\"event_data.TargetDomainName\":{\"query\":\"Window Manager\",\"type\":\"phrase\"}}}},{\"meta\":{\"negate\":true,\"index\":\"winlogbeat-*\",\"key\":\"tags\",\"value\":\"dc\",\"disabled\":false,\"alias\":null},\"query\":{\"match\":{\"tags\":{\"query\":\"dc\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}}],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647}}"
+      }
+    }
+  },
+  {
+    "_id": "Failed-Logon-Attempts-Area-Chart",
+    "_type": "visualization",
+    "_source": {
+      "title": "Failed Logon Attempts",
+      "visState": "{\n  \"title\": \"Failed Logon Attempts\",\n  \"type\": \"area\",\n  \"params\": {\n    \"shareYAxis\": true,\n    \"addTooltip\": true,\n    \"addLegend\": true,\n    \"smoothLines\": false,\n    \"scale\": \"linear\",\n    \"interpolate\": \"linear\",\n    \"mode\": \"stacked\",\n    \"times\": [],\n    \"addTimeMarker\": false,\n    \"defaultYExtents\": false,\n    \"setYExtents\": false,\n    \"yAxis\": {}\n  },\n  \"aggs\": [\n    {\n      \"id\": \"1\",\n      \"type\": \"count\",\n      \"schema\": \"metric\",\n      \"params\": {\n        \"customLabel\": \"Logon Attempts\"\n      }\n    },\n    {\n      \"id\": \"2\",\n      \"type\": \"date_histogram\",\n      \"schema\": \"segment\",\n      \"params\": {\n        \"field\": \"@timestamp\",\n        \"interval\": \"auto\",\n        \"customInterval\": \"2h\",\n        \"min_doc_count\": 1,\n        \"extended_bounds\": {}\n      }\n    },\n    {\n      \"id\": \"3\",\n      \"type\": \"terms\",\n      \"schema\": \"group\",\n      \"params\": {\n        \"field\": \"event_data.LogonType\",\n        \"size\": 5,\n        \"order\": \"desc\",\n        \"orderBy\": \"1\"\n      }\n    }\n  ],\n  \"listeners\": {}\n}",
+      "uiStateJSON": "{\n  \"vis\": {\n    \"colors\": {\n      \"2\": \"#0A50A1\",\n      \"3\": \"#BF1B00\",\n      \"10\": \"#F9934E\"\n    }\n  }\n}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\n  \"index\": \"winlogbeat-*\",\n  \"query\": {\n    \"query_string\": {\n      \"query\": \"event_id: 4625\",\n      \"analyze_wildcard\": true\n    }\n  },\n  \"filter\": []\n}"
+      }
+    }
+  },
+  {
+    "_id": "Remote-Desktop-Connections",
+    "_type": "visualization",
+    "_source": {
+      "title": "Remote Desktop Connections",
+      "visState": "{\"title\":\"Remote Desktop Connections\",\"type\":\"tile_map\",\"params\":{\"mapType\":\"Heatmap\",\"isDesaturated\":true,\"addTooltip\":true,\"heatMaxZoom\":16,\"heatMinOpacity\":\"0.25\",\"heatRadius\":25,\"heatBlur\":15,\"heatNormalizeData\":true,\"wms\":{\"enabled\":false,\"url\":\"https://basemap.nationalmap.gov/arcgis/services/USGSTopo/MapServer/WMSServer\",\"options\":{\"version\":\"1.3.0\",\"layers\":\"0\",\"format\":\"image/png\",\"transparent\":true,\"attribution\":\"Maps provided by USGS\",\"styles\":\"\"}}},\"aggs\":[{\"id\":\"3\",\"type\":\"geohash_grid\",\"schema\":\"segment\",\"params\":{\"field\":\"geoip.location\",\"autoPrecision\":true,\"precision\":3}},{\"id\":\"2\",\"type\":\"count\",\"schema\":\"metric\",\"params\":{}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"colors\":{\"2\":\"#0A50A1\",\"3\":\"#BF1B00\",\"10\":\"#F9934E\"}}}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"winlogbeat-*\",\"query\":{\"query_string\":{\"query\":\"event_id:4624 or event_id:4625\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "Total-Successful-Logons-1",
+    "_type": "visualization",
+    "_source": {
+      "title": "Total Successful Logons",
+      "visState": "{\n  \"title\": \"Total Successful Logons\",\n  \"type\": \"table\",\n  \"params\": {\n    \"perPage\": 10,\n    \"showMeticsAtAllLevels\": false,\n    \"showPartialRows\": false,\n    \"sort\": {\n      \"columnIndex\": null,\n      \"direction\": null\n    }\n  },\n  \"aggs\": [\n    {\n      \"id\": \"2\",\n      \"type\": \"count\",\n      \"schema\": \"metric\",\n      \"params\": {\n        \"customLabel\": \"Total Logons\"\n      }\n    },\n    {\n      \"id\": \"1\",\n      \"type\": \"cardinality\",\n      \"schema\": \"metric\",\n      \"params\": {\n        \"field\": \"computer_name\",\n        \"customLabel\": \"Unique Computers\"\n      }\n    },\n    {\n      \"id\": \"3\",\n      \"type\": \"terms\",\n      \"schema\": \"bucket\",\n      \"params\": {\n        \"field\": \"event_data.TargetUserName\",\n        \"size\": 20,\n        \"order\": \"desc\",\n        \"orderBy\": \"2\",\n        \"customLabel\": \"User Name\"\n      }\n    },\n    {\n      \"id\": \"4\",\n      \"type\": \"terms\",\n      \"schema\": \"bucket\",\n      \"params\": {\n        \"field\": \"event_data.TargetDomainName\",\n        \"size\": 20,\n        \"order\": \"desc\",\n        \"orderBy\": \"2\",\n        \"customLabel\": \"Domain\"\n      }\n    },\n    {\n      \"id\": \"5\",\n      \"type\": \"cardinality\",\n      \"schema\": \"metric\",\n      \"params\": {\n        \"field\": \"event_data.IpAddress\",\n        \"customLabel\": \"Unique IPs\"\n      }\n    }\n  ],\n  \"listeners\": {}\n}",
+      "uiStateJSON": "{\n  \"vis\": {\n    \"params\": {\n      \"sort\": {\n        \"columnIndex\": null,\n        \"direction\": null\n      }\n    }\n  }\n}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\n  \"filter\": []\n}"
+      },
+      "savedSearchId": "Winlogbeat-Successful-User-Logon"
+    }
+  },
+  {
+    "_id": "Logon-Map",
+    "_type": "visualization",
+    "_source": {
+      "title": "Map Setup",
+      "visState": "{\n  \"title\": \"Map Setup\",\n  \"type\": \"markdown\",\n  \"params\": {\n    \"markdown\": \"This map shows the locations associated with logon successes and failures. This requires a [GeoIP filter](https://www.elastic.co/guide/en/logstash/current/plugins-filters-geoip.html) to be applied to the `event_data.IpAddress` field and it expects a geo_point type in the `geoip.location` field.\\n\\nThis requires Winlogbeat to route its data through Logstash or an Ingest Node pipeline. And it requires the index template to define the `geoip.location` field as a geo_point.\"\n  },\n  \"aggs\": [],\n  \"listeners\": {}\n}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\n  \"query\": {\n    \"query_string\": {\n      \"query\": \"*\",\n      \"analyze_wildcard\": true\n    }\n  },\n  \"filter\": []\n}"
+      }
+    }
+  }
+]
