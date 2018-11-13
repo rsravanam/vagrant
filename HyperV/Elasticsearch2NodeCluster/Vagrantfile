@@ -1,0 +1,94 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+
+###############################################################################
+###############################################################################
+##   vagrant box add generic/ubuntu1604    ##                                ##
+##                                                                           ##
+##    	==> box: Loading metadata for box 'generic/ubuntu1604'               ##
+##    		box: URL: https://vagrantcloud.com/generic/ubuntu1604            ##
+##    	This box can work with multiple providers! The providers that it     ##
+##    	can work with are listed below. Please review the list and choose    ##
+##    	the provider you will be working with.                               ##
+##    	                                                                     ##
+##    	1) hyperv                                                            ##
+##    	2) libvirt                                                           ##
+##    	3) parallels                                                         ##
+##    	4) virtualbox                                                        ##
+##    	5) vmware_desktop                                                    ##
+##    	                                                                     ##
+##    	Enter your choice: 1                                                 ##
+##                                                                           ##
+##   vagrant init generic/ubuntu1604                                         ##
+##   vagrant up --provider=hyperv                                            ##
+##   vagrant status                                                          ##
+##   vagrant ssh                                                             ##
+##   vagrant halt                                                            ##
+##   vagrant destroy                                                         ##
+###############################################################################
+###############################################################################
+
+# Vagrant Variables
+
+vagrant_box = "generic/ubuntu1604"
+vagrant_network = "public_network"
+vagrant_hyperv_switch_type = 'Default Switch' # "External Switch" or "Internal Switch" or "Default Switch"
+vagrant_elasticsearch_2_node_cluster_install_script = "elasticsearch_3_node_cluster.sh"
+vagrant_vm_provider = "hyperv"
+
+
+Vagrant.configure(2) do |config|
+
+  config.vm.define "es3nodeclustern1" do |es3nodeclustern1|
+
+    es3nodeclustern1.vm.hostname = "es3nodeclustern1"
+    es3nodeclustern1.vm.box = vagrant_box
+    es3nodeclustern1.vm.network vagrant_network, bridge: vagrant_hyperv_switch_type
+    es3nodeclustern1.vm.provision :shell, path: vagrant_elasticsearch_2_node_cluster_install_script
+
+    es3nodeclustern1.vm.provider vagrant_vm_provider do |vb|
+	
+      vb.memory = "1024"
+
+    end
+
+  end
+  
+  config.vm.define "es3nodeclustern2" do |es3nodeclustern2|
+
+    es3nodeclustern2.vm.hostname = "es3nodeclustern2"
+    es3nodeclustern2.vm.box = vagrant_box
+    es3nodeclustern2.vm.network vagrant_network, bridge: vagrant_hyperv_switch_type
+    es3nodeclustern2.vm.provision :shell, path: vagrant_elasticsearch_2_node_cluster_install_script
+
+    es3nodeclustern2.vm.provider vagrant_vm_provider do |vb|
+	
+      vb.memory = "1024"
+
+    end
+
+  end
+
+  config.vm.define "es3nodeclustern3" do |es3nodeclustern3|
+
+    es3nodeclustern3.vm.hostname = "es3nodeclustern3"
+    es3nodeclustern3.vm.box = vagrant_box
+    es3nodeclustern3.vm.network vagrant_network, bridge: vagrant_hyperv_switch_type
+    es3nodeclustern3.vm.provision :shell, path: vagrant_elasticsearch_2_node_cluster_install_script
+
+    es3nodeclustern3.vm.provider vagrant_vm_provider do |vb|
+	
+      vb.memory = "1024"
+
+    end
+
+  end
+  
+end
+
+	

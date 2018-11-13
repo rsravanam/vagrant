@@ -1,0 +1,22 @@
+    1  uname
+    2  uname -a
+    3  curl localhost:2379
+    4  curl https;//localhost:2379
+    5  curl https://localhost:2379
+    6  top
+    7  ps -dlf
+    8  ps -e
+    9  netstat -nlp
+   10  netstat -ntlp
+   11  sudo service ufw status
+   12  sudo service ufw stop
+   13  sudo service ufw status
+   14  curl http://127.0.0.1:2379
+   15  ETCDCTL_API=3 /tmp/etcd-download-test/etcdctl --endpoints=localhost:2379 put foo bar
+   16  ETCDCTL_API=3 /tmp/etcd-download-test/etcdctl --endpoints=localhost:2379 get foo
+   17  echo $PATH
+   18  k
+   19  echo $PATH
+   20*
+   21  k
+   22  history

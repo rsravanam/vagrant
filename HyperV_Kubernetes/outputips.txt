@@ -1,0 +1,5 @@
+    swarm_manager_one:           inet addr:172.21.188.10  Bcast:172.21.188.15  Mask:255.255.255.240
+    swarm_manager_two:           inet addr:172.21.188.7  Bcast:172.21.188.15  Mask:255.255.255.240
+    swarm_node_one:           inet addr:172.21.188.11  Bcast:172.21.188.15  Mask:255.255.255.240
+    swarm_node_two:           inet addr:172.21.188.3  Bcast:172.21.188.15  Mask:255.255.255.240
+    swarm_node_three:           inet addr:172.21.188.13  Bcast:172.21.188.15  Mask:255.255.255.240

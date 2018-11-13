@@ -1,0 +1,32 @@
+---
+- hosts: localhost
+  gather_facts: no
+  become: yes
+  become_method: sudo
+
+  tasks:
+    - name: Execute Python Script To Get Inventory Report
+      command: python awx_inv.py
+      register: invrep
+  
+    - name: print inv report
+      debug: msg="invrep"
+
+    - name: Date fact
+      debug:
+        msg: "{{ lookup('pipe','date +%Y-%m-%d') }}"
+
+    - name: Send e-mail to a bunch of users, attaching files
+      mail:
+        host: smtp.gmail.com
+        port: 587
+        username: mail@ch.com
+        password: Pa55
+        to: Sravanam Ravi <s42.cloud@gmail.com>
+        subject: Ansible-report
+        body: Hello, this is an e-mail. I hope you like it ;-)
+        from: s2@gmail.com (Ravi Sravanam)
+        to: Sravanam Ravi <sr2.cloud@gmail.com>
+        cc: Ravi S <rm@gh.com>
+        attach: ./Inventory-Report-{{ lookup('pipe','date +%Y-%m-%d') }}.csv
+      delegate_to: localhost
