@@ -1,0 +1,22 @@
+vagrant_box = "bento/ubuntu-16.04"
+vagrant_network = "private_network"
+vagrant_network_type = 'dhcp'
+sqlite_install_script = "sqlite.sh"
+vagrant_vm_provider = "virtualbox"
+
+Vagrant.configure(2) do |config|
+
+  config.vm.define "sqlite" do |sqlite|
+  
+    sqlite.vm.hostname = "jenkins-server"
+    sqlite.vm.box = vagrant_box
+    sqlite.vm.network vagrant_network, type: vagrant_network_type
+    sqlite.vm.provision :shell, path: sqlite_install_script
+    sqlite.vm.provider vagrant_vm_provider do |vb|
+      vb.name = "sqlitedb"
+      vb.memory = "1024"
+    end
+	
+  end
+  
+end
